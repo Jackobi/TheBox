@@ -15,28 +15,40 @@ namespace UnityStandardAssets.Cameras
         public float tiltMin = 45f;
         public float tiltMax = 75f;
         public float turnSmoothing = 0.0f;
+        //Boom length should be multiplied by -1 when called
+        [Range(0f, 5f)]public float boomLength = 2f;
         public bool verticalAutoReturn = false;
 
         //Private variables
-        private Transform pivot;
+        private Transform pivotRef;
+        private Transform cameraRef;
         private float lookAngle;
         private float tiltAngle;
+        private Vector3 cameraPos;
         private Vector3 pivotEulers;
         private Quaternion pivotTargetRot;
         private Quaternion transformTargetRot;
 
         protected override void Awake()
         {
-            //
-            pivot = transform.GetChild(0);
-            pivotEulers = pivot.rotation.eulerAngles;
-            pivotTargetRot = pivot.transform.localRotation;
+            
+            pivotRef = transform.GetChild(0);
+            cameraRef = pivotRef.transform.GetChild(0);
+            pivotEulers = pivotRef.rotation.eulerAngles;
+            pivotTargetRot = pivotRef.transform.localRotation;
             transformTargetRot = transform.localRotation;
+
+            cameraPos = new Vector3(cameraRef.transform.position.x, cameraRef.transform.position.y, -boomLength);
+            cameraRef.transform.position = cameraPos;
+
         }
 
         protected void Update()
         {
-            HandleRotationMovement();
+            if(Input.GetAxis("Fire2") > 0)
+            {
+                HandleRotationMovement();
+            }
         }
 
         private void HandleRotationMovement()
@@ -73,12 +85,12 @@ namespace UnityStandardAssets.Cameras
             //Apply turn smoothing if enabled
             if (turnSmoothing > 0)
             {
-                pivot.localRotation = Quaternion.Slerp(pivot.localRotation, pivotTargetRot, turnSmoothing * Time.deltaTime);
+                pivotRef.localRotation = Quaternion.Slerp(pivotRef.localRotation, pivotTargetRot, turnSmoothing * Time.deltaTime);
                 transform.localRotation = Quaternion.Slerp(transform.localRotation, transformTargetRot, turnSmoothing * Time.deltaTime);
             }
             else
             {
-                pivot.localRotation = pivotTargetRot;
+                pivotRef.localRotation = pivotTargetRot;
                 transform.localRotation = transformTargetRot;
             }
         }
@@ -92,6 +104,14 @@ namespace UnityStandardAssets.Cameras
 
             // Move the rig towards target position.
             transform.position = Vector3.Lerp(transform.position, m_Target.position, deltaTime * lerpSpeed);
+            //Adjust boom distance
+            cameraPos = new Vector3(cameraRef.transform.position.x, cameraRef.transform.position.y, -boomLength);
+            cameraRef.transform.position = Vector3.Lerp(cameraRef.transform.position, cameraPos,deltaTime * lerpSpeed);
+        }
+
+        public void ChangeBoomLength(float newLength)
+        {
+            boomLength = newLength;
         }
 
     }

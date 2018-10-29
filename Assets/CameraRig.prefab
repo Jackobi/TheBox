@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4869248541926978}
   - component: {fileID: 114511541977273258}
+  - component: {fileID: 114316849317090800}
   m_Layer: 0
   m_Name: CameraRig
   m_TagString: Untagged
@@ -147,6 +148,17 @@ AudioListener:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1785592612613868}
   m_Enabled: 1
+--- !u!114 &114316849317090800
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1699104270988990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0463059deb69a444dbcba71711882390, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114511541977273258
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -168,4 +180,5 @@ MonoBehaviour:
   tiltMin: 45
   tiltMax: 75
   turnSmoothing: 0
+  boomLength: 2
   verticalAutoReturn: 0
